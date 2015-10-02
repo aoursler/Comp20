@@ -29,26 +29,28 @@
        }
 }
 
+/*~~~~~~~the above works, the below does not work~~~~~~~*/
+
 @media (min-width: 800px) and (max-width: 900px){
        .homer {
-              background-position: -333px 0px;
+              background-position: 0px -250px;
        }
 }
 
 @media (min-width: 700px) and (max-width: 800px){
        .homer {
-              background-position: -333px -125px;
+              background-position: -166.5px -250px;
        }
 }
 
 @media (min-width: 600px) and (max-width: 700px){
        .homer {
-              background-position: -499.5px 0px;
+              background-position: 0px -375px;
        }
 }
 
 @media (max-width: 600px){
        .homer {
-              background-position: -499.5px -125px;
+              background-position: -166.5px -375px;
        }
 }
