@@ -3,14 +3,11 @@ function init(){
     var ctx = canvas.getContext('2d');
     var img = new Image();
     img.src = "duckhunt-background.gif";
-    var duck1 = new Image();
-    var duck2 = new Image();
-    duck1.src = "duckhunt_various_sheet.png";
-    duck2.src = "duckhunt_various_sheet.png";
+    var ducks = new Image();
+    ducks.src = "duckhunt_various_sheet.png";
     img.onload = function(){
 	ctx.drawImage(img, 25, 25, 800, 600) 
-	//	ctx.drawImage(duck1,
+	ctx.drawImage(ducks, 0, 120, 35, 35, 300, 150, 50, 50)
+	ctx.drawImage(ducks, 210, 120, 45, 35, 400, 100, 50, 50)
     };
-    
-    console.log("Hi!");
 }
