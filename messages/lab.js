@@ -6,6 +6,6 @@ function parse(){
 
     for ( count=0; count<parsedObjects.length; count++){
 	console.log(Object.keys(parsedObjects[count]));
-	elem.innerHTML += "<p>Data: " + parsedObjects[count] + "</p>";
+	elem.innerHTML += "<p>Data: " + parsedObjects[count]["content"] + parsedObjects["username"] + parsedObjects["active"] + parsedObjects["created_at"] + parsedObjects["updated_at"] + "</p>";
     }
 }
