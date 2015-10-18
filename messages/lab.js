@@ -3,7 +3,7 @@ function parse(){
     xhr = new XMLHttpRequest();
     xhr.open("get", "jsondata", true);
 
-    parsedObjects = JSON.parse(jsondata);
+    parsedObjects = JSON.parse(xhr);
 
     elem = document.getElementById("messages");
 

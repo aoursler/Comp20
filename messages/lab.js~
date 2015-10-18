@@ -1,7 +1,7 @@
-
 function parse(){
-
     var jsondata = 'http://messagehub.herokuapp.com/messages.json';
+    xhr = new XMLHttpRequest();
+    xhr.open("get", "jsondata", true);
 
     parsedObjects = JSON.parse(jsondata);
 
