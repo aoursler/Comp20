@@ -1,6 +1,6 @@
 function parse(){
     //    jsondata = "http://messagehub.herokuapp.com/messages.json";
-    parsedOjects = JSON.parse("http://messagehub.herokuapp.com/messages.json");
+    parsedOjects = JSON.parse('http://messagehub.herokuapp.com/messages.json');
 	//jsondata);
 
     elem = document.getElementById("messages");

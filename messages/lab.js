@@ -1,11 +1,10 @@
 function parse(){
-    //    jsondata = "http://messagehub.herokuapp.com/messages.json";
-    parsedOjects = JSON.parse('http://messagehub.herokuapp.com/messages.json');
-	//jsondata);
+    jsondata = 'http://messagehub.herokuapp.com/messages.json';
+    parsedOjects = JSON.parse(jsondata);
 
     elem = document.getElementById("messages");
 
-    for ( count=0; count<parsedObjects[count]; count++){
+    for ( count=0; count<parsedObjects.length; count++){
 	console.log(Object.keys(parsedObjects[count]));
 	elem.innerHTML += "<p>Data: " + parsedObjects[count] + "</p>";
     }
