@@ -1,14 +1,20 @@
 function parse(){
-    var jsondata = {};//http://stackoverflow.com/questions/3666889/how-do-i-parse-json-without-jquery
-    var Request = new XMLHttpRequest();
-    var URL = "http://messagehub.herokuapp.com/messages.json";
-    Request.open("GET", URL, true);
-    Request.sent(null);
 
-    parsedOjects = JSON.parse(jsondata);
-    elem = document.getElementById("results");
-    for (count = 0; count < parsedObjects[count]){
-	console.log(Object.keys(parsedObjects[count]));
-	elem.innerHTML += "<p>Data: " + parsedObjects[count] + "</p>";
+    var Request = new XMLHttpRequest();
+    var jsondata = "data.json";
+    Request.open("GET", jsondata, true);
+
+    Request.onreadystatechange = function(){
+        if (Request.readyState == 4 && Request.status == 200){
+	    var parsedObjects = JSON.parse(Request.responseText);
+	    var elem = document.getElementById("messages");
+	    for ( count=0; count<parsedObjects.length; count++){
+		console.log(Object.keys(parsedObjects[count]));
+                elem.innerHTML += "<p>Data: " + parsedObjects[count]["content"] + parsedObjects[count]["username"] + "</p>";
+	    }
+	}
     }
+
+    Request.send();
+   
 }
