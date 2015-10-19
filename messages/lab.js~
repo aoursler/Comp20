@@ -1,14 +1,20 @@
 function parse(){
-    var jsondata = 'http://messagehub.herokuapp.com/messages.json';
-    xhr = new XMLHttpRequest();
-    xhr.open("get", "jsondata", true);
 
-    parsedObjects = JSON.parse(jsondata);
+    var Request = new XMLHttpRequest();
+    var jsondata = "data.json";
+    Request.open("GET", jsondata, true);
 
-    elem = document.getElementById("messages");
-
-    for ( count=0; count<parsedObjects.length; count++){
-	console.log(Object.keys(parsedObjects[count]));
-	elem.innerHTML += "<p>Data: " + parsedObjects[count]["content"] + parsedObjects["username"] + parsedObjects["active"] + parsedObjects["created_at"] + parsedObjects["updated_at"] + "</p>";
+    Request.onreadystatechange = function(){
+        if (Request.readyState == 4 && Request.status == 200){
+	    var parsedObjects = JSON.parse(Request.responseText);
+	    var elem = document.getElementById("messages");
+	    for ( count=0; count<parsedObjects.length; count++){
+		console.log(Object.keys(parsedObjects[count]));
+                elem.innerHTML += "<p>Data: " + parsedObjects[count]["content"] + parsedObjects["username"] + parsedObjects["active"] + parsedObjects["created_at"] + parsedObjects["updated_at"] + "</p>";
+	    }
+	}
     }
+
+    Request.send();
+   
 }
