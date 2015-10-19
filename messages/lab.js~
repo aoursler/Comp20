@@ -1,1 +1,14 @@
-// Your JavaScript goes here...
+function parse(){
+    var jsondata = {};//http://stackoverflow.com/questions/3666889/how-do-i-parse-json-without-jquery
+    var Request = new XMLHttpRequest();
+    var URL = "http://messagehub.herokuapp.com/messages.json";
+    Request.open("GET", URL, true);
+    Request.sent(null);
+
+    parsedOjects = JSON.parse(jsondata);
+    elem = document.getElementById("results");
+    for (count = 0; count < parsedObjects[count]){
+	console.log(Object.keys(parsedObjects[count]));
+	elem.innerHTML += "<p>Data: " + parsedObjects[count] + "</p>";
+    }
+}
