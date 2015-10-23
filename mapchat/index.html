@@ -17,7 +17,7 @@
     var me = new google.maps.LatLng(lat, lng);
   
     var myOptions = { 
-      zoom: 13,
+      zoom: 15,
       center: me,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -42,33 +42,75 @@
         alert("Geolocation is not supported by your web browser. What a shame!");
       }
     }
+
     function renderMap()
     {
       me = new google.maps.LatLng(lat, lng);
       map.panTo(me);
       marker = new google.maps.Marker({
-      positon: me,
+        title: "<h1> PatIsdale </h1><br/> <h2>Hello Everyone!</p>",
+        position: me,
+        icon: "footprint.jpg",
       });
       marker.setMap(map);
+
       google.maps.event.addListener(marker, 'click', function(){
+        /*PUT YOUR POPUP STUFF HERE!*/
         infowindow.setContent(marker.title);
         infowindow.open(map, marker);
       });
+      renderPins();
     }
 
-/*Lab 6 used as a reffence*/
-    var request = new XMLHttpRequest();
-    var url = "https://secret-about-box.herokuapp.com/sendLocation";
-    request.open("POST", url, true);
-    /*https://stackoverflow.com/questions/9713058/sending-post-data-with-a-xmlhttprequest*/
-    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.onreadystatechange = function(){
-      if (request.readyState == 4 && request.status == 200){    
-        var responseText;
-        alert(request.responseText);
+    /*Lab 6 used as a reffence*/
+    function renderPins(){
+      var request = new XMLHttpRequest();
+      var url = "https://secret-about-box.herokuapp.com/sendLocation";
+      request.open("POST", url, true);
+      /*https://stackoverflow.com/questions/9713058/sending-post-data-with-a-xmlhttprequest*/
+      request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      request.onreadystatechange = function(){
+        if (request.readyState == 4 && request.status == 200){    
+          var responseText;
+         var parsedObjects = JSON.parse(request.responseText);
+         for(i=0; i<parsedObjects.length; i++){
+          if(parsedObjects[i]["login"] != "PatIsdale"){
+            pin = new google.maps.LatLng(parsedObjects[i]["lat"], parsedObjects[i]["lng"]);
+            student = new google.maps.Marker({
+             title: "<h1>" + parsedObjects[i]["login"] + "</h1><br/>" + "<p>" + parsedObjects[i]["message"] + "</p>" + "<p>" + Haversine(lat, lng, parsedObjects[i]["lat"], parsedObjects[i]["lng"]) + " miles</p>",
+             position: pin,
+            });
+            student.setMap(map);
+            google.maps.event.addListener(student, 'click', function(){
+            /*PUT YOUR POPUP STUFF HERE!*/
+              infowindow.setContent(this.title);
+              infowindow.open(map, this);
+            });
+          }
+          }
+        var elem = document.getElementById("map_canvas");
+        /*console.log(parsedObjects[count]["login"]+parsedObjects[count]["message"]+parsedObjects[count]["lat"]+parsedObjects[count]["lng"]+"</p>"*/
+        }
+        /*alert(request.responseText);*/
       }
+      request.send("login=PatIsdale&lat=" + lat + "&lng=" + lng + "&message=Hello%20Everyone!");
     }
-    request.send("login=PatIsdale&lat=" + lat + "&lng=" + lng + "&message=My%20Location");
+/*http://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript*/
+    function Haversine(lat2, lon2, lat1, lon1) { 
+      var R = 6371; // km 
+      //has a problem with the .toRad() method below.
+     var dLat = toRad(lat2-lat1);  
+     var dLon = toRad(lon2-lon1);  
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                     Math.cos(toRad(lat1)) * Math.cos( toRad(lat2)) * 
+                      Math.sin(dLon/2) * Math.sin(dLon/2);  
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a) ); 
+      var d = R * c; 
+      return d; 
+    }
+    function toRad(degrees){
+      return degrees * Math.PI / 180;
+    }
     </script>
   
   </head>
