@@ -9,7 +9,7 @@ function parse(){
 	    var parsedObjects = JSON.parse(Request.responseText);
 	    var elem = document.getElementById("messages");
 	    for ( count=0; count<parsedObjects.length; count++){
-		console.log(Object.keys(parsedObjects[count]));
+		//console.log(Object.keys(parsedObjects[count]));
                 elem.innerHTML += "<p>" + parsedObjects[count]["content"] + parsedObjects[count]["username"] + "</p>";
 	    }
 	}

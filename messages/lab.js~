@@ -10,7 +10,7 @@ function parse(){
 	    var elem = document.getElementById("messages");
 	    for ( count=0; count<parsedObjects.length; count++){
 		console.log(Object.keys(parsedObjects[count]));
-                elem.innerHTML += "<p>Data: " + parsedObjects[count]["content"] + parsedObjects[count]["username"] + "</p>";
+                elem.innerHTML += "<p>" + parsedObjects[count]["content"] + parsedObjects[count]["username"] + "</p>";
 	    }
 	}
     }
