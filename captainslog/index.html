@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>Captain's Log</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+    //how to use localStorage:http://stackoverflow.com/questions/3262605/html5-localstorage-check-if-item-is-set
+    //                        http://www.w3schools.com/html/html5_webstorage.asp 
+      if(localStorage.getItem("previous") ==  true){//never before run
+        localStorage.setItem("previous", "");
+      }else{//load previous data
+        $("#log").prepend(localStorage.getItem("previous"));
+      }
+    //how to register enter key:http://stackoverflow.com/questions/979662/how-to-detect-pressing-enter-on-keyboard-using-jquery
+      $(msg).keypress(function(e){//when a key is pressed
+        if(e.keyCode == 13){//if that key is enter
+          var data = "<p>" + new Date() + "-" + $("#msg").val() + "</p>";//create new data line
+          localStorage.setItem("previous", data + localStorage.getItem("previous"));//store it
+          $("#log").prepend(data);//and print it to the screen
+        }
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <h1>Captain's Log</h1>
+  <h3>New entry: <input type="text" id="msg" name="msg" size="30" /></h3>
+  <div id="log"></div>
+</body>
+</html>
