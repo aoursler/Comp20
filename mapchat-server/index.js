@@ -33,9 +33,9 @@ app.post('/sendLocation', function(req, res){//DO NOT UPSERT
 		db.collection('people', function(err, col){
 			if (loginlist.indexOf(login) != -1){
 				col.insert({'login': login, 'lat': Number(lat), 'lng': Number(lng), 'message': msg, 'time': new Date()});
-					col.find().toArray(function(error, result){
-						res.send(result);
-					});
+				col.find().toArray(function(error, result){
+					res.send(result);
+				});
 			}else{
 				res.send({"error":"Whoops, something is wrong with your data!"});
 			}
@@ -52,7 +52,7 @@ app.get('/latest.json', function(req, res){
 	var login = query['login'];
 	if (loginlist.indexOf(login) != -1){ // login is valid
 	db.collection('people', function(err, col){
-		col.find({'login': login}).sort({time: -1}).limit(1).toArray(function(err, cursor){
+		col.find({'login': login}).sort({time: 1}).limit(1).toArray(function(err, cursor){
 		if(cursor[0].login != undefined){//TIME IS DONE WRONG
 			res.send('{ "_id": "' + cursor[0]._id + '", "login": "' + cursor[0].login  + '", "lat": "' + cursor[0].lat +'", "lng": "'+ cursor[0].lng +'", "message": "' +cursor[0].msg + '", "created_at": "' + cursor[0].time + '}');
 		}else{
@@ -68,7 +68,7 @@ app.get('/latest.json', function(req, res){
 app.get('/', function(req, res){
 	var indexPage;
 	db.collection('people', function(err, col){
-		col.find().toArray(function(err, cursor){
+		col.find().sort({time: -1}).toArray(function(err, cursor){
 			if (!err) {
 				indexPage = "<!DOCTYPE HTML><html><head></head><body><h1>People:</h1>";
 				for (var count=0; count<cursor.length; count++) {
