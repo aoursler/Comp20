@@ -1,0 +1,15 @@
+#bold{
+	font-weight: bolder;
+}
+#red{
+	color: red;	
+}
+div.img{
+	text-align: center;
+}
+h1{
+	text-align: center;
+}
+p{
+	font-weight: normal;
+}

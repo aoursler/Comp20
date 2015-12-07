@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hacking Mapchat</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<h1>Hacking Mapchat</h1>
+	<h3>By Anne Oursler  Dec 5 2015</h3>
+	<h2>Introduction</h2>
+	<h3>
+		<p>This assignemnt tests the security of the Mapchat and corresponding Mapchat server made by Ben Pall for assignmen 2 and assignenment 3. Map chat is a web aplication which uses user's location and an entered message to plot the user as a point on a map using the Google Maps API. The users ploted on the map are each allowed to have a message, which apears with their username when their marker is clicked. Current vulnrabilitys make is less than idea for actutual production, as it is far too easy to seriously break it. This document points out some of these flaws, and ways to fix them.</p>
+		<p><span id="bold">What is a vulnerablity?</span> Anything that could compromise the site could be considered a vulnerablity. In addition, I would consider anything the user could do to trouble the website's admin a hack as well.</p>
+	</h3>
+	<h2>Methodology</h2>
+	<h3>
+		<p>Testing was originaly carried out black box, however after short time, I hacked the page such that it was difficult to continue testing. Then I swiched to a white box testing aproach, where I had and viewed Ben Pall's code, so that I could run the code localy and have access to the database (and could clear it if neccisary) in additon to finding vulnerabilities in the code.</p>
+	</h3>
+	<h2>Issues Found</h2>
+	<h3>
+		<p><span id="bold">1. Cross Site Scripting</span></p>
+		<p>Affects the Get "/" API. </p>
+		<p>Security Risk: <span id="red">High:</span> This flaw puts map chat at serious risk. I was easily able to redirect the page on its opening to an entirely diffent website, this making the site essentually useless.</p>
+		<p>Data submited to the Post "/sendLocation" API is not checked for characters that would  allow for cross site scripting. Thus javascript and html could easily be entered in message feild of a post, and the mapchat website would run the contents. I did this using postman:</p> 
+		<p><img src="postmanrickroll.png" alt="Postman" style="height:250px;"></p> 
+		<p>but it could have also been done using the curl command:</p>
+		<p><img src="curlrickroll.png" alt="Curl" style="height:50px;"></p> 
+		<p>This serious flaw incapacitated the website to the degree that I struggled to continue working on it without clearing the database.</p>
+		<p>This issue can be resolved by never ever trusting user input, and escaping it prior to entering int into the database. FIGURE OUT HOW TO ESCAPE INPUT! (ALSO HOW TO ENTER JAVASCRIPT INTO MY HTML AS ONLY TEXT)</p>
+		<p><span id="bold">2. Overuse of Database</span></p>
+		<p>Affects MongoDB, and thus all sections of the server.</p>
+		<p>Security Risk: <span id="red">Medium:</span> This flaw could shut down the server, or charge the credit card associated with the account if enough data was added to mongo data base to overflow the amount that is alloted for free. Thus it could potentialy shut down the server.</p>
+		<p>I exicuted this attach by making a shell comand that repeatedly sent a curl request to the server. My command only sends ten curls, however it would be very easy to send any number of curl requests, eventually shutting down the server. </p>
+		<p><img src="shelloverflow.png" alt="Shell Command" style="height:150px;"></p>
+		<p>This issue if fairly easily fixable by using upsert instead of insert, so that each username is allowed no more than one checkin, and that checkin is simply updated.</p>
+	</h3>
+</body>
+</html>
+
+
+
