@@ -9,33 +9,61 @@
 	<h3>By Anne Oursler  Dec 5 2015</h3>
 	<h2>Introduction</h2>
 	<h3>
-		<p>This assignemnt tests the security of the Mapchat and corresponding Mapchat server made by Ben Pall for assignmen 2 and assignenment 3. Map chat is a web aplication which uses user's location and an entered message to plot the user as a point on a map using the Google Maps API. The users ploted on the map are each allowed to have a message, which apears with their username when their marker is clicked. Current vulnrabilitys make is less than idea for actutual production, as it is far too easy to seriously break it. This document points out some of these flaws, and ways to fix them.</p>
-		<p><span id="bold">What is a vulnerablity?</span> Anything that could compromise the site could be considered a vulnerablity. In addition, I would consider anything the user could do to trouble the website's admin a hack as well.</p>
+		<p>This assessment tests the security of the Comp20 asignments Mapchat and Mapchat Server, specifically those made by Ben Pall. Mapchat is a web aplication which uses user's login, location and a message, chosen by the user, to plot the user as a point on a map using the Google Maps API. The user apears as a pin among the many other pins of all other users who have used the app. These pins, when clicke on display the login, message, and distance from the current user of the pin.</p>
 	</h3>
 	<h2>Methodology</h2>
 	<h3>
-		<p>Testing was originaly carried out black box, however after short time, I hacked the page such that it was difficult to continue testing. Then I swiched to a white box testing aproach, where I had and viewed Ben Pall's code, so that I could run the code localy and have access to the database (and could clear it if neccisary) in additon to finding vulnerabilities in the code.</p>
+		<p>Testing was  carried out in a black box method, without viewing the original code. This had the exeption that after a short time the database was too compromised for the defaced website to be functional. At this time the server and website were deployed localy useing the original code so that testing could continue and the database could be cleared.</p>
 	</h3>
+	<h2>Abstract of Findings</h2>
+		<p>All of the issues found stemed from one key principle which was not taken into acount durring lecture: You Never Ever Trust User Input. In all cases the data entered was either manipulated or amplified in unantisipated way such that the database took on incorrect data or in one case far too much data.</p>
 	<h2>Issues Found</h2>
 	<h3>
-		<p><span id="bold">1. Cross Site Scripting</span></p>
-		<p>Affects the Get "/" API. </p>
-		<p>Security Risk: <span id="red">High:</span> This flaw puts map chat at serious risk. I was easily able to redirect the page on its opening to an entirely diffent website, this making the site essentually useless.</p>
-		<p>Data submited to the Post "/sendLocation" API is not checked for characters that would  allow for cross site scripting. Thus javascript and html could easily be entered in message feild of a post, and the mapchat website would run the contents. I did this using postman:</p> 
-		<p><img src="postmanrickroll.png" alt="Postman" style="height:250px;"></p> 
-		<p>but it could have also been done using the curl command:</p>
-		<p><img src="curlrickroll.png" alt="Curl" style="height:50px;"></p> 
-		<p>This serious flaw incapacitated the website to the degree that I struggled to continue working on it without clearing the database.</p>
-		<p>This issue can be resolved by never ever trusting user input, and escaping it prior to entering int into the database. FIGURE OUT HOW TO ESCAPE INPUT! (ALSO HOW TO ENTER JAVASCRIPT INTO MY HTML AS ONLY TEXT)</p>
-		<p><span id="bold">2. Overuse of Database</span></p>
-		<p>Affects MongoDB, and thus all sections of the server.</p>
-		<p>Security Risk: <span id="red">Medium:</span> This flaw could shut down the server, or charge the credit card associated with the account if enough data was added to mongo data base to overflow the amount that is alloted for free. Thus it could potentialy shut down the server.</p>
-		<p>I exicuted this attach by making a shell comand that repeatedly sent a curl request to the server. My command only sends ten curls, however it would be very easy to send any number of curl requests, eventually shutting down the server. </p>
-		<p><img src="shelloverflow.png" alt="Shell Command" style="height:150px;"></p>
-		<p>This issue if fairly easily fixable by using upsert instead of insert, so that each username is allowed no more than one checkin, and that checkin is simply updated.</p>
+		<p><span id="bold">1. Overuse of Database Insertions</span></p>
+		<p>Affects the Post "/sendLocation"</p>
+		<p>Security Risk: <span id="red"> High</span></p> 
+			<p>This flaw could shut down the server, or charge the credit card associated with the account if enough data was added to mongo data base to overflow the amount that is alloted for free. Thus it could potentialy shut down the server, making entire system useless.</p>
+		<p>This attack was done by making a shell comand that repeatedly sent a curl request to the server. The command only sends ten curls, however it would be very easy to send any number of curl requests, eventually shutting down the server. </p>
+			<p><img src="shelloverflow.png" alt="Shell Command" style="height:150px;"></p>
+		<p>This issue if fairly easily fixable by using the .upsert() function instead of the .insert() function, so that each username is allowed no more than one checkin, and that checkin is simply updated.</p>
+
+		<p><span id="bold">2. Accepting Strings as Latitude and Longitude</span></p>
+		<p>Affects the Database</p>
+		<p>Security Risk: <span id="red"> Low</span></p>
+			<p>This flaw does relitively little to the function of the server or the client, however it does allow the client to give the server, and thus the database bogus data. This does not crash or seriously effect the server, but it also does not place the clients marker at any location.</p>
+		<p>I exicuted this issue through the Google app Postman as follows:</p>
+			<p><img src="postmanlatlng.png" alt="Postman" style="height:50px;"></p>
+		<p>This data was entered into the database dispite being impossible to plot onto a map as seen in the Get "/latest.json":</p>
+			<p><img src="invalidlatlng.png" alt="Invalid Lat Lng" style="height:50px;"></p>
+		<p>This issue can be fixed by simply checking if the data sent for the lattitude and longitude are numbers. This can be done by checking the data that is entered:</p>
+		<p>if (typeof login === 'string' && !isNaN(lat) && !isNaN(lng) && typeof msg === 'string'){</p>
+		<p>}else{</p>
+		<p>res.send({"error":"Whoops, something is wrong with your data!"});</p>
+		<p>}</p>
+
+		<p><span id="bold">3. Cross Site Scripting (XSS)</span></p>
+		<p>Affects: Get "/" API</p>
+		<p>Severity:<span id="red"> High</span></p>
+			<p>This flaw puts map chat at serious risk. I was easily able to redirect the page on its opening to an entirely diffent website, thus making the site essentually useless, if not hazardus to it's users.</p>
+		<p>Data submited to the Post "/sendLocation" API is not checked for characters that allow for cross site scripting. Thus javascript and html could easily injected into the database through the message feild of a post. The next time that the Get "/" API is used, the client side will exicute the injected field. I exicuted this using the Google app Postman as follows:</p> 
+			<p><img src="postmanrickroll.png" alt="Postman" style="height:250px;"></p> 
+		<p>However it could have also been done using the curl command:</p>
+			<p><img src="curlrickroll.png" alt="Curl" style="height:50px;"></p> 
+		<p>The results were the same. The user was redirected to youtube where a video began playing:</p>
+			<p><img src="rickrolled.png" alt="Rick Roll" style="height: 250px;"></p>
+		<p>This serious flaw incapacitated the website until the database was manually cleared of the entry.</p>
+		<p></p>
+		<p>This issue can be resolved by escaping user input prior to entering it into the database. simpy escaping the message with "\" before questionable charachters should be sufficent. For example:</p> 
+		<p>for(int i=0; i < s.length(); i++){</p>
+			<p>if(s[i] == " < " or s[i] == " > " or s[i] == " ' " or s[i] == ' " '){</p>
+				<p>s = [s.slice(0, i), \, s.slice(i)].join();</p>
+			<p>}</p>
+		<p>}</p>
+	</h3>
+
+	<h2>Conclusion</h2>
+	<h3>
+		<p>Issues with Mapchat make it reasonably easy to make the site become non-functional. The recomendations above would solve some of the most simple problems with the site, however far more issues exist, including problems with a lack of the SOP due to CORS being used with the wild card. The easiest and most time efficent way to fix all of these issues would be to rewrite the entire server, with an eye to detail in terms of vulnerabilities.</p>
 	</h3>
 </body>
 </html>
-
-
-
